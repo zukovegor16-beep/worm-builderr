@@ -13,11 +13,7 @@ const __dirname = path.dirname(__filename);
 
 // ========== НАСТРОЙКИ ==========
 const API_KEYS = [
-  'sk-ba2e9f5485714f75a143ddaa2177ab2e',
-  'sk-76fe0fb356ed426fad6c16e204cab3d0',
   'sk-47d71261d08f4a0aa9d78dfec754bd04',
-  'sk-b317524e417643a4acd8b41f39ae8c19',
-  'sk-a7aca38097ab4d349c2d34f554209ec1',
 ];
 const API_URL = 'https://api.deepseek.com/v1/chat/completions';
 const MODEL = 'deepseek-chat';
