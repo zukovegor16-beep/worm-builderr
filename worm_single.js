@@ -8,6 +8,15 @@ import notifier from 'node-notifier';
 import * as acorn from 'acorn';
 import crypto from 'crypto';
 import http from 'http';
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Worm is alive\n');
+}).listen(PORT, () => {
+  log('info', `Keep‑alive server listening on port ${PORT}`);
+});
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
