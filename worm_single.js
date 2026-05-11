@@ -7,6 +7,7 @@ import { exec } from 'child_process';
 import notifier from 'node-notifier';
 import * as acorn from 'acorn';
 import crypto from 'crypto';
+import http from 'http';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -545,7 +546,14 @@ async function main() {
 
   await worm.run();
 }
-
+// Заглушка HTTP‑сервера, чтобы Render видел открытый порт
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('OK');
+}).listen(PORT, () => {
+  console.log(`Health check server listening on port ${PORT}`);
+});
 main().catch(err => {
   log('crit', err.message, err);
   console.error('❌ КРИТИЧЕСКАЯ ОШИБКА:', err.message);
