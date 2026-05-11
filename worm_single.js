@@ -158,6 +158,7 @@ class DeepSeekSession {
   }
 
   async send(userMessage, onChunk = null) {
+    log('info', `[ЗАПРОС] ${userMessage.slice(0, 300)}...`);
     this.messages.push({ role: 'user', content: userMessage });
     let context = this.messages.slice(-10);
     const totalLength = context.reduce((sum, m) => sum + m.content.length, 0);
@@ -171,6 +172,7 @@ class DeepSeekSession {
       try {
         const fullReply = await this._streamRequest(context, onChunk);
         this.messages.push({ role: 'assistant', content: fullReply });
+        log('info', `[ОТВЕТ] ${fullReply.slice(0, 300)}...`);
         return fullReply;
       } catch (e) {
         log('warn', `Запрос не удался (попытка ${attempt+1}): ${e.message}`, e);
