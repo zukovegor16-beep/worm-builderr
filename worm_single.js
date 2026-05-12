@@ -7,6 +7,8 @@ import { exec } from 'child_process';
 import notifier from 'node-notifier';
 import * as acorn from 'acorn';
 import crypto from 'crypto';
+import http from 'http';
+const PORT = process.env.PORT || 10000;
 // Держим процесс активным для Worker
 setInterval(() => {}, 60000);
 
@@ -514,6 +516,28 @@ class ParentWorm {
 }
 
 // ========== ТОЧКА ВХОДА ==========
+function startKeepAliveServer() {
+  const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Worm is alive\n');
+  });
+  
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      log('warn', `Порт ${PORT} занят, повторная попытка через 5 с.`);
+      setTimeout(() => {
+        server.close();
+        server.listen(PORT);
+      }, 5000);
+    } else {
+      log('error', `Ошибка сервера: ${err.message}`, err);
+    }
+  });
+  
+  server.listen(PORT, () => {
+    log('info', `Keep‑alive сервер запущен на порту ${PORT}`);
+  });
+}
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
@@ -539,7 +563,7 @@ async function main() {
   const plan = JSON.parse(planRaw);
   const baseDir = path.join(__dirname, 'projects');
   const worm = new ParentWorm(API_KEYS, plan, baseDir, dryRun);
-
+startKeepAliveServer();
   // Graceful shutdown
   const shutdown = async () => {
     log('info', 'Получен сигнал завершения, сохраняю прогресс...');
