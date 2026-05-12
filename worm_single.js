@@ -558,7 +558,6 @@ async function main() {
   await worm.run();
 }
 // Заглушка HTTP‑сервера, чтобы Render видел открытый порт
-const PORT = process.env.PORT || 3000;
 http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('OK');
