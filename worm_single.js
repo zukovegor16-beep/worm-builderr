@@ -8,7 +8,7 @@ import notifier from 'node-notifier';
 import * as acorn from 'acorn';
 import crypto from 'crypto';
 import http from 'http';
-const PORT = process.env.PORT || 60000;
+const PORT = process.env.PORT || 10000;
 // Держим процесс активным для Worker
 setInterval(() => {}, 60000);
 
